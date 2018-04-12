@@ -61,7 +61,8 @@ class Validator{
 
 
 
-
+window.app = window.app || {};
+window.app.Validator = Validator;
 
 
 

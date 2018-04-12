@@ -17,11 +17,6 @@
 			}
 	}
 
-	window.app = window.app || {};
-	window.app.Observer = Observer;
-
-}());
-
 
 class Utils{
 	
@@ -60,6 +55,13 @@ class Utils{
 		elem.setAttribute('type', type);
 	};
 }
+
+	window.app = window.app || {};
+	window.app.Observer = Observer;
+	window.app.Utils = Utils;
+}());
+
+
 
 
 

@@ -2,33 +2,162 @@
 
 (function() {
 
-	class View {
-		constructor (doms , controller){
+	class GalleryView {
+		constructor (doms , userInfo, utils){
 			this.DOMElements = doms;
-			this.controller = controller;
-			this.readyDataForGallery;
+			this.utils = utils;
 			this.visibleData;
 			this.imageCounter;
-			this.showPassStatus = 0;
-			this.user1;
-
+			this.userInfo;
+			this.counter = 0;
+			
+			//this.controller = controller;
+			//this.readyDataForGallery;
+			//this.showPassStatus = 0;
 			//this.ready = false;	
-			//this.counter = 0;
 		};
 		init() {
 			this.ready = true;
 		};
 		buildView(data) {  // данные для галереи
 			console.log("View is ready");
-			//console.log(this.items);
 			console.log(data);
-			this.hideLoginForm();
-			this.showPersonNavbar();
-			this.showGallery();
-			this.prepareData(data);
-			this.reBuildGalleryAfterSort(this.visibleData);
+			this.visibleData = data;
+			//this.initListeners();
+			//this.biuldWholeGallery();
 
-		};			
+		};	
+
+		initListeners(){
+			this.DOMElements.addImgBtn.addEventListener("click", this.showFormForAdding());
+			this.DOMElements.resultBlock.addEventListener("click", this.showFormForEditing());
+			this.DOMElements.sortBlock.addEventListener("change", this.sortGallery());
+		}
+
+		biuldWholeGallery(){
+			this.sortGallery ();
+		};
+
+		sortGallery (){
+			switch (this.DOMElements.sortBlock.value) {
+					case "0":
+							this.visibleData.sort((a, b) => {
+								if(a.name < b.name) return -1;
+								if(a.name > b.name) return 1;
+								return 0;
+						});
+						this.userInfo.sortMethod = "0";
+						break;
+						case "1":
+						this.visibleData.sort((a, b) => {
+							if(a.name < b.name) return -1;
+							if(a.name > b.name) return 1;
+							return 0;
+						});
+						this.userInfo.sortMethod = "1";
+						break;
+						case "2":
+						this.visibleData.sort((a, b) => {
+							if(a.name < b.name) return 1;
+							if(a.name > b.name) return -1;
+							return 0;
+						});
+						this.userInfo.sortMethod = "2";
+						break;
+						case "3":
+						this.visibleData.sort((a, b) => {
+							if(a.date < b.date) return 1;
+							if(a.date > b.date) return -1;
+							return 0;
+						});
+						this.userInfo.sortMethod = "3";
+						break;
+						case "4":
+						this.visibleData.sort((a, b) => {
+							if(a.date < b.date) return -1;
+							if(a.date > b.date) return 1;
+							return 0;
+						});
+						this.userInfo.sortMethod = "4";
+						break;
+					}
+					this.utils.setInfo(this.userInfo);
+					this.reBuildGalleryAfterSort();
+				};
+				
+				reBuildGalleryAfterSort (){  
+					this.DOMElements.resultBlock.innerHTML = "";
+					for (let i = 0; i < visibleData.length; i++) {    
+						this.DOMElements.resultBlock.innerHTML += this.createGalleryItem(visibleData[i], i+1); 
+					}
+					this.imageCounter = visibleData.length;
+					this.DOMElements.counter.innerHTML = this.imageCounter;
+					this.DOMElements.backCounter.innerHTML = this.readyDataForGallery.length - this.imageCounter;
+					
+				};
+				
+				createGalleryItem (item, index) {
+					return `<div class="col-md-4 gallery-card" id = ${item.itemID}>
+											<div class="card mb-4 box-shadow gallery-item" id = "${item.id}">
+													<img src="${this.urlFomat(item.url)}" alt="${this.nameFormat(item.name)}" class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" data-holder-rendered="true" style="height: 225px; width: 100%; display: block;">
+													<div class="card-body">
+															<div class="card-text">${index}: ${this.nameFormat(item.name)}</div>
+															<div class="text-muted top-padding">${this.descriptionFormat(item.description)}</div>
+															<div class="text-muted">${this.dateFormat(item.date)}</div>
+															<div class="btn-group">
+																<button type="button" class="btn btn-outline-secondary">View</button>
+																<button type="button" class="btn btn-outline-secondary edit">Edit</button>
+															</div>
+															<div  name = "delete-img" class = "btn btn-danger delete-card"  title = "Удалить данное изображение"> Удалить </div>
+													</div>
+													
+											</div>
+									</div>`;
+				};
+				nameFormat (name){
+					return  name ? name[0].toUpperCase() + name.substring(1).toLowerCase() : "Lohn Doh";
+				};
+				urlFomat  (url){
+						return  url.indexOf("http://") === -1 ? `http://${url}` :  url; 
+				};
+				descriptionFormat(descr){
+						return (descr.length > 15 ) ? descr.substring(0 , 15) + "..." : descr;
+				};
+				dateFormat (date){
+						let format = "YYYY/MM/DD HH:mm";
+						return  (!date.isNaN) ? moment(date).format(format) : console.log("Error, data is incorrect") ;
+				};
+				
+				
+				showFormForAdding(event){
+					if(!this.checkLimit()){
+						return false;
+					}
+					
+					if(event.target.classList.contains("edit") || event.target.id == "add-img"){
+						this.clearFormForAdd();
+						this.utils.showHide1({"show" : [this.DOMElements.formForAdding]});
+						this.utils.showHide1({"hide" : [this.DOMElements.editBtn]});
+					}
+				};
+
+				checkLimit (){
+					return true;
+					// let element = this.DOMElements.addImgBtn;
+					// 	if (this.imageCounter < this.cardsLimit) {
+					// 		this.utils.removeButtonDisabled(element);
+					// 		return true;
+					// 	}
+					// 	if (this.imageCounter >= this.cardsLimit) {
+					// 			this.utils.setButtonDisabled(element);
+					// 			return false;
+					// 	}
+				};
+
+/*
+
+
+
 		isReady(){
 			return this.ready;
 		};
@@ -153,37 +282,6 @@
 			this.DOMElements.sortBlock.value = user.sortMethod;
 		};
 
-		createGalleryItem (item, index) {
-			return `<div class="col-md-4 gallery-card" id = ${item.itemID}>
-									<div class="card mb-4 box-shadow gallery-item" id = "${item.id}">
-											<img src="${this.urlFomat(item.url)}" alt="${this.nameFormat(item.name)}" class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" data-holder-rendered="true" style="height: 225px; width: 100%; display: block;">
-											<div class="card-body">
-													<div class="card-text">${index}: ${this.nameFormat(item.name)}</div>
-													<div class="text-muted top-padding">${this.descriptionFormat(item.description)}</div>
-													<div class="text-muted">${this.dateFormat(item.date)}</div>
-													<div class="btn-group">
-														<button type="button" class="btn btn-outline-secondary">View</button>
-														<button type="button" class="btn btn-outline-secondary edit">Edit</button>
-													</div>
-													<div  name = "delete-img" class = "btn btn-danger delete-card"  title = "Удалить данное изображение"> Удалить </div>
-											</div>
-											
-									</div>
-							</div>`;
-		};
-		nameFormat (name){
-			return  name ? name[0].toUpperCase() + name.substring(1).toLowerCase() : "Lohn Doh";
-		};
-		urlFomat  (url){
-				return  url.indexOf("http://") === -1 ? `http://${url}` :  url; 
-		};
-		descriptionFormat(descr){
-				return (descr.length > 15 ) ? descr.substring(0 , 15) + "..." : descr;
-		};
-		dateFormat (date){
-				let format = "YYYY/MM/DD HH:mm";
-				return  (!date.isNaN) ? moment(date).format(format) : console.log("Error, data is incorrect") ;
-		};
 
 
 		biuldWholeGallery(){
@@ -277,12 +375,12 @@ sortGallery (){
 
 			}
 		};
+		*/
 
 	}
 
-
 		window.app = window.app || {};
-		window.app.View = View;
+		window.app.GalleryView = GalleryView;
 
 }());
 

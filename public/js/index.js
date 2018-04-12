@@ -89,6 +89,25 @@
 		wrongPassMsg : document.querySelector("#wrongPassMsg")
 	};
 
+	const domsForGallery = {	
+		resultBlock:document.querySelector('#result'),
+		sortBlock:document.querySelector("#type-selector"),
+		counter:document.querySelector('#counter'),
+		backCounter:document.querySelector('#back-counter'),
+		modal:document.querySelector("#myModal"),
+		addImgBtn: document.querySelector("#add-img"),
+		formForAdding: document.querySelector("#form-add-new"),
+		newName: document.querySelector("#new-name"),
+		newUrl: document.querySelector("#new-url"),
+		newDescription: document.querySelector("#new-descr"),
+		newDate: document.querySelector("#new-date"),
+		newStatus: document.querySelector("#new-params-status"),
+		newProgress: document.querySelector("#new-params-progress"),
+		addNewImgBtn: document.querySelector("#add-new-img"),
+		editBtn: document.querySelector("#edit-img"),
+		galleryCards : document.querySelectorAll(".gallery-card"),
+	}
+
 	const userInfo = {
 		login : "ddd@gmail.com", 
 		password : "12345678",
@@ -97,11 +116,17 @@
 
 	let observer = new window.app.Observer;
 	let utils = new window.app.Utils;
+
+	let galleryModel = new window.app.GalleryModel(url);
+	let galleryView = new window.app.GalleryView(domsForGallery , userInfo, utils);
+	let galleryController = new window.app.GalleryController(galleryModel, galleryView, 			observer,  utils, userInfo);
+
+
 	//let loginForm = new window.app.LoginForm;
 	let validationModel = new window.app.ValidationModel(url, userInfo);
 	let validationView = new window.app.ValidationView(domsForLoginform , userInfo);
 	//let validator = new window.app.Validator(validationView);
-	let validationController = new window.app.ValidationController(validationModel, validationView, observer,  utils, userInfo);
+	let validationController = new window.app.ValidationController(validationModel, validationView, observer,  utils, userInfo, galleryController);
 	validationController.init();
 
 
@@ -117,4 +142,4 @@
 
 }());
 
-//https://gist.githubusercontent.com/dmitriydgit/36b44650a6a01c27ade48e52631a99ce/raw/b8b492237ff9146a59025d76cb284664e3d68da7/cars.json
+//пишу контроллер галереи. вытянуть данные из 33 задания организовать работу с кнопками и бекендом

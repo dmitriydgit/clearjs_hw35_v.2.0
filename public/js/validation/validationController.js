@@ -1,19 +1,20 @@
 (function() {
 
 	class Controller { 
-			constructor(model, view, observer , utils, userInfo) {
-					this.model = model;
-					this.view = view;
-					this.observer = observer;
-					//this.validator = validator;
-					this.utils = utils;
-					this.userInfo = userInfo;
+			constructor(model, view, observer , utils, userInfo, galleryController) {
+				this.galleryController = galleryController;
+				this.model = model;
+				this.view = view;
+				this.observer = observer;
+				this.utils = utils;
+				this.userInfo = userInfo;
 			}    
+				//this.validator = validator;
 				
 			init() { 
 				this.model.setUserInfo(this.userInfo); // новый
 				this.model.setLocalStorGalleryInitStatus("false");
-				this.model.getData();
+				//this.model.getData();
 				//this.checkIfUserLoggedIn();    
 				this.initListeners();
 				this.initTooltips();
@@ -53,15 +54,16 @@
 						this.view.userInfo = this.userInfo;
 						this.view.buildView();
 						this.model.changeLocalStorLoggedInStatus("true");
-				
-						//this.gallery.init();
+						this.galleryController.init();
 						//this.utils.setInfo(this.user1);
+						console.log("validation is over")
 					
 				}) 
 				.catch(response => 	{
 					this.view.showAlertMsg();
 					console.log(response , "user not valid");
 				})
+				
 			
 			} else {
 				return false;

@@ -1,24 +1,64 @@
-"use strict";
 
-(function() {
-
-	class View {
-		constructor (doms /*controller*/){
-			this.DOMElements = doms;
-			// this.controller = controller;
-			// this.readyDataForGallery;
-			// this.visibleData;
-			// this.imageCounter;
-			// this.showPassStatus = 0;
-			this.userInfo;
-
-			//this.ready = false;	
-			//this.counter = 0;
+export default	class LoginView {
+		constructor (){
+			this.DOMElements = {
+				submitBtn : document.querySelector("#submitBtn"),
+				enterBtn : document.querySelector("#enterBtn"),
+				exitBtn : document.querySelector("#exitBtn"),
+				email : document.querySelector("#inputEmail"),
+				password : document.querySelector("#inputPassword"),
+				checkBoxRemememberMe : document.querySelector("#inputRemember"),
+				showUserDataBtn : document.querySelector("#showUserDataBtn"),
+				showGalleryBtn : document.querySelector("#showGalleryBtn"),
+				alertMsg : document.querySelector("#alert-message"), 
+				notFilledEmailMsg : document.querySelector("#notFilledEmailMsg"),
+				notFilledPassMsg : document.querySelector("#notFilledPassMsg"),
+				wrongEmailMsg : document.querySelector("#wrongEmailMsg"),
+				wrongPassMsg : document.querySelector("#wrongPassMsg")
+			}
+			
 		};
-
-		init() {
-			this.ready = true;
+		
+		getLogAndPass(){
+			let item = {
+				"login" : this.DOMElements.email.value,
+				"password" : this.DOMElements.password.value
+			}
+			return item;
 		};
+		
+		showErrorMsg(msgCode){
+			switch(msgCode){
+				case '1':
+				this.showHide({"show" : [this.DOMElements.alertMsg]});
+				break;
+			
+				case '2':
+				this.showHide({"show" : [this.DOMElements.notFilledEmailMsg]})
+				break;
+				
+				case '3':
+				this.showHide({"show" : [this.DOMElements.notFilledPassMsg]})
+				break;
+
+				case '4':
+				this.showHide({"show" : [this.DOMElements.wrongEmailMsg]})
+				break;
+
+				case '5':
+				this.showHide({"show" : [this.DOMElements.wrongPassMsg]})
+				break;
+			}
+		}
+
+		hideAlertMsgs(){
+			this.showHide({"hide" : [this.DOMElements.alertMsg,
+				this.DOMElements.notFilledEmailMsg, 
+				this.DOMElements.notFilledPassMsg,
+				this.DOMElements.wrongEmailMsg,
+				this.DOMElements.wrongPassMsg]});
+		};
+		
 		buildView() {  // данные для галереи
 			console.log("View is ready");
 			
@@ -28,10 +68,6 @@
 			this.fillInputsOnUserPage(this.DOMElements.email.value , this.DOMElements.password.value);
 			this.showGalleryBlock();
 			this.initListeners();
-			/*
-			this.prepareData(data);
-			this.reBuildGalleryAfterSort(this.visibleData);
-*/
 		};	
 		
 		initListeners () {
@@ -41,36 +77,11 @@
 			this.DOMElements.showUserDataBtn.addEventListener("click", this.showUserDataBlock.bind(this));	
 		};
 
-		getDataForValidation(){
-			let item = {
-				"login" : this.DOMElements.email.value,
-				"password" : this.DOMElements.password.value
-			}
-			return item;
-		};
-
-/*
-		setInfo(obj){
-			localStorage.setItem("userInfo" , JSON.stringify(obj))
-		};
-		getInfo(){
-			return JSON.parse(localStorage.getItem("userInfo"));
-		};
-*/
-
-
 		fillInputsOnUserPage (inp , pass){
 			this.DOMElements.personNameField.value = inp;    
 			this.DOMElements.personPasswordField.value = pass;
-	};
-
-		hideAlertMsgs(){
-			this.showHide({"hide" : [this.DOMElements.alertMsg,
-				this.DOMElements.notFilledEmailMsg, 
-				this.DOMElements.notFilledPassMsg,
-				this.DOMElements.wrongEmailMsg,
-				this.DOMElements.wrongPassMsg]});
 		};
+
 		showAlertMsg(){
 			this.showHide({"show" : [this.DOMElements.alertMsg]})
 		}
@@ -79,26 +90,15 @@
 		}
 		showNotFilledPasswordMsg(){
 			this.showHide({"show" : [this.DOMElements.notFilledPassMsg]})
-	}
-	showBadLoginMsg(){
-		this.showHide({"show" : [this.DOMElements.wrongEmailMsg]})
-	};
+		}
+		showBadLoginMsg(){
+			this.showHide({"show" : [this.DOMElements.wrongEmailMsg]})
+		};
 
-	showBadPasswordMsg(){
-		this.showHide({"show" : [this.DOMElements.wrongPassMsg]})
-	};
+		showBadPasswordMsg(){
+			this.showHide({"show" : [this.DOMElements.wrongPassMsg]})
+		};
 
-
-		// showAlertMsg(msg){
-		// 	switch(msg) {
-		// 		case 'value1': 
-		// 			this.showHide("show", )
-		// 			break;
-		// 		case 'value2': 
-		// 			this.showHide()
-		// 			break;
-		// 	}
-		// }
 		hideLoginForm(){
 			this.showHide({"hide" : [this.DOMElements.form]});
 		}
@@ -107,6 +107,22 @@
 		}
 		showPersonNavbar(){
 			this.showHide({"show" : [this.DOMElements.personNavbar]})
+		}
+		showButtons(){
+			this.showHide({"show" :  
+				[this.DOMElements.showUserDataBtn,
+					this.DOMElements.showGalleryBtn,
+					this.DOMElements.enterBtn]
+			})
+		}
+
+		hideEnterBtn(){
+			this.showHide({"hide" : [this.DOMElements.enterBtn]});
+		}
+		hideButtons(){
+			this.showHide({"hide" :  [this.DOMElements.showUserDataBtn,
+				this.DOMElements.showGalleryBtn]})
+			
 		}
 
 		showHide(object){    
@@ -323,11 +339,6 @@ sortGallery (){
 
 	}
 
-
-		window.app = window.app || {};
-		window.app.ValidationView = View;
-
-}());
 
 
 

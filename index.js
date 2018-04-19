@@ -9,7 +9,7 @@ server.use(middlewares)
 // Add custom routes before JSON Server router
 server.use(jsonServer.bodyParser)
 server.post('/login', (req, res) => {
-    console.log(req.body.login);
+    console.log(req.body);
     if(req.body.login == "ddd@gmail.com" && req.body.password == "12345678"){
         res.jsonp({status:true})
     } else {

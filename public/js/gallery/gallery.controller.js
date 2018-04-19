@@ -1,45 +1,111 @@
-(function() {
 
-	class GalleryController { 
-			constructor(galleryModel, galleryView, observer,  utils, userInfo) {
-					this.model = galleryModel;
-					this.view = galleryView;
-					this.observer = observer;
-					this.utils = utils;
-					this.userInfo = userInfo;
 
+	export default class GalleryController { 
+			constructor(galleryModel, galleryView) {
+				this.galleryModel = galleryModel;
+				this.galleryView = galleryView;
+				this.objectFromresponse;
 			}       
 			
 			init(){ 
-				if(this. model.getLocalStorageGalleryStatus() == "true"){
-					return false;
-				}
-				this.model.getDataFromGist().then(data => {
-					//this.model.saveData(data);
-					console.log("data from base", data);
-					this.initListeners();
-					this.view.buildView(data); 
-				})
-				// 	console.log(data);
-				// 	this.model.saveData(data);
-				
-				//this.refreshGallery();
-			};
-
-			initListeners (){
-					
-					console.log('listeners is inited')
-					// this.view.DOMElements.addNewImgBtn.addEventListener("click", this.addImage());
-					// this.view.DOMElements.editBtn.addEventListener("click", this.editCard());
-					// this.view.DOMElements.resultBlock.addEventListener("click", this.deleteImage()); 
-					
-					// this.DOMElements.addImgBtn.addEventListener("click", this.showFormForAdding.bind(this));
-					// this.DOMElements.resultBlock.addEventListener("click", this.showFormForEditing.bind(this));
-					// this.DOMElements.sortBlock.addEventListener("change", this.sortGallery.bind(this));
+				this.uploadData();
+				this.bindEvents();
+							
 			};
 			
+			uploadData(){
+				this.galleryModel.getData()
+				.then(data => {
+					this.galleryView.init(data)
+					return data
+				})
+			}
+		
+			editGallery(url , params){
+				 return fetch(url , params).then(response => console.log(response))
+				
+			};
+
+			bindEvents(){
+				
+				console.log('bindevents is inited')
+				this.galleryView.DOMElements.addNewImgBtn.addEventListener("click", this.addImage.bind(this));
+				this.galleryView.DOMElements.editBtn.addEventListener("click", this.editCard.bind(this));
+				this.galleryView.DOMElements.resultBlock.addEventListener("click", this.showFormForEditing.bind(this));
+				this.galleryView.DOMElements.resultBlock.addEventListener("click", this.deleteImage.bind(this)); 
+			};
+			
+			addImage (event){
+				if(event.target.id == "add-new-img" ){
+					
+					let item = this.galleryView.createItemForAdd();
+					
+					this.galleryModel.saveData(item).then(data => this.galleryView.refreshGallery(data)) 
+					this.galleryView.hideFormForAdding();
+				}
+			};
+
+			showFormForEditing(event){  //
+				if(event.target.classList.contains("edit")){
+						this.galleryView.toggleAddEditBtn();
+						let itemId = event.target.closest(".gallery-card").id;
+						this.galleryModel.getItem(itemId)
+						.then(data => {
+							this.galleryView.fillFormForEdit(data);
+							this.objectFromresponse = data;
+						})
+						.catch(function(error) {
+							console.log(error);
+						});
+					};
+			};
+
+			editCard(event){
+				if(event.target.id == "edit-img" ){
+					let item = this.galleryView.createItemForAdd();
+					let url = `http://localhost:3000/cars/${this.objectFromresponse.id}`;
+					let id =	this.objectFromresponse.id;						
+					let params = {
+								method: 'PUT',
+								headers: {
+									'Content-Type': 'application/json'},
+								body: JSON.stringify(item)
+					};
+					this.editGallery(url , params).then(data => this.galleryView.refreshGallery(data)) 
+					this.galleryView.hideFormForAdding();
+				}	
+			};
+		
+			deleteImage(event){
+				if(event.target.hasAttribute("name" , "delete-img")){
+					let url = `http://localhost:3000/cars/${event.target.closest(".gallery-card").id}`;
+					let params = {
+						method: 'DELETE',
+						headers: {'Content-Type': 'application/json'}
+					};
+					this.editGallery(url , params).then(data => this.galleryView.refreshGallery(data)) 
+				}
+			};
+			
+		
+
+		}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
 
 
 
@@ -319,13 +385,5 @@
   //       }
   //   };
    
-}
 
 
-
-	window.app = window.app || {};
-	window.app.GalleryController = GalleryController;
-	// window.app.LoginForm = LoginForm;
-	// window.app.Validator = Validator;
-
-}());

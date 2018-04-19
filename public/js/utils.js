@@ -1,8 +1,5 @@
-"use strict";
 
-(function() {
-
-	class Observer {
+	export default 	class Observer {
 			constructor() {
 					this.events = {};
 			}
@@ -39,9 +36,9 @@ class Utils{
 		element.removeAttribute("data-toggle");
 	};
 	hideAlertMsgs(obj){
-		this.showHide1(obj);
+		this.showHide(obj);
 	};
-	showHide1(object){    
+	showHide(object){    
 		for(var key in object) { 
 				var key = key;
 				var value = object[key]; 
@@ -59,7 +56,7 @@ class Utils{
 	window.app = window.app || {};
 	window.app.Observer = Observer;
 	window.app.Utils = Utils;
-}());
+
 
 
 

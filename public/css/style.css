@@ -101,7 +101,7 @@ body {
   width: 49%;
   vertical-align: top;
 }
-#eye{
+#togglePasswordBtn{
   margin-top:15px;
   color:#fff;
 }
@@ -151,4 +151,9 @@ body {
 .button-grey{
 	background-color: grey;
 	
+}
+
+	
+.headerTop a  {
+	margin: 0 10px;
 }

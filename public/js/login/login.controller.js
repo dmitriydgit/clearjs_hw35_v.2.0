@@ -8,7 +8,6 @@
 			}    
 
 			init() {
-				this.checkSession();
 				this.loginView.hideButtons();
 				this.fillStartPageUserData();
 				this.bindEvents();
@@ -17,10 +16,8 @@
 
 			fillStartPageUserData (){
 				let checkBoxStatus = this.loginModel.getCheckboxStatus();
-				
 					if (checkBoxStatus == "true"){
 						this.loginModel.getData().then(data => {
-							console.log(data);
 							this.loginView.DOMElements.checkBoxRemememberMe.checked = true;	
 							this.loginView.DOMElements.email.value = data.login;    
 							this.loginView.DOMElements.password.value = data.password;
@@ -30,55 +27,42 @@
 						this.loginView.DOMElements.email.value = "";
 						this.loginView.DOMElements.password.value = "";
 					}
-				
 			};
 				
-			checkSession() {
-				let logIn = this.loginModel.checkSession();
-				if (logIn) {
-						window.location.href = '/public/index.html?#gallery';
-				} else {
-						window.location.href = '/public/index.html?#';
-
+			bindEvents() {
+				//this.loginView.DOMElements.enterBtn.addEventListener("click", this.initValidation.bind(this));
+				this.loginView.DOMElements.submitBtn.addEventListener("click", this.initValidation.bind(this));
+				this.loginView.DOMElements.exitBtn.addEventListener("click", this.initLogOut.bind(this));
+			}
+		
+			initValidation(event){
+				event.preventDefault();
+				if(event.target.id == 'submitBtn'){
+					this.loginView.hideAlertMsgs();
+					let credentials = this.loginView.getLogAndPass();
+					let validResult = this.loginModel.checkFields (credentials.login, credentials.password);
+					if(validResult){
+						this.loginModel.logAndPassValidation(credentials)
+						.then(data => {
+							if (data.status) {
+								this.getAndSetCheckboxStatus();
+								window.location.href = '/public/index.html?#gallery';
+								this.loginView.showButtons();
+							} else {
+									this.loginView.showErrorMsg("1")
+								}
+							});
+						} else {
+						this.loginView.showErrorMsg(validResult)
+					}
 				}
 			}
-
-
-			bindEvents() {
-				this.loginView.DOMElements.enterBtn.addEventListener("click", (e) => {
-					//e.preventDefault();
-					this.initValidation();
-				});
-				this.loginView.DOMElements.submitBtn.addEventListener("click", (e) => {
-					//e.preventDefault();
-					this.initValidation();
-				});
-				this.loginView.DOMElements.exitBtn.addEventListener("click", () => {
-						this.initLogOut();
-				});
-			}
-
-		initValidation(){
-			this.loginView.hideAlertMsgs();
-				let data = this.loginView.getLogAndPass();		
-				this.loginModel.logAndPassValidation(data).then(response => response.json())
-				.then(
-						res => 	{
-											console.log(res)
-											this.getAndSetCheckboxStatus();
-											window.location.href = '/public/index.html?#gallery';
-											this.loginView.hideAlertMsgs();
-											//this.loginView.hideEnterBtn();
-
-										},
-						rej => {
-							this.loginView.showErrorMsg(rej)
-						}
-				)
-		}
-		initLogOut(){
+			
+			initLogOut(){
 			this.loginModel.logOut();
 			this.loginView.hideButtons();
+			window.location.href = '/public/index.html?#';
+			this.fillStartPageUserData();
 		}
 		getAndSetCheckboxStatus(){
 			if(this.loginView.DOMElements.checkBoxRemememberMe.checked == true){
@@ -87,18 +71,26 @@
 				this.loginModel.setCheckboxStatus('false');
 			}
 		}
-
 	}
+	
+	//дописать логаут!!!!
+	
+	// checkSession() {
+	// 	let logIn = this.loginModel.checkSession();
+	// 	if (logIn) {
+	// 			window.location.href = '/public/index.html?#gallery';
+	// 	} else {
+	// 			window.location.href = '/public/index.html?#';
 
-//дописать логаут!!!!
-
-
-/*
-
-
-
-			checkIfUserLoggedIn (){
-				//this.user1 = this.model.getInfo();
+	// 	}
+	// }
+	
+	/*
+	
+	
+	
+	checkIfUserLoggedIn (){
+		//this.user1 = this.model.getInfo();
 				if(this.model.getIsUserLoggedIn() == "true"){
 					this.view.hideLoginForm();
 					this.view.showPersonNavbar();

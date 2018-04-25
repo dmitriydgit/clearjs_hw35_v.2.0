@@ -33,8 +33,9 @@
 					changeBtnAppearance(showMainBtn, showGalleryBtn, showInfoBtn);
 			},
 			init : () => {
-					let url = "http://localhost:3000/user";
-					let loginModel = new LoginModel(url);
+					let urlUser = "http://localhost:3000/user";
+					let urlLogin = "http://localhost:3000/login";
+					let loginModel = new LoginModel(urlLogin , urlUser);
 					let loginView = new LoginView;
 					let loginController = new LoginController(loginModel, loginView);
 					loginController.init();
@@ -48,6 +49,7 @@
 						changeBtnAppearance(showGalleryBtn, showMainBtn, showInfoBtn);
 					},
 					init: () => {
+						
 							let url = "http://localhost:3000/cars";
 							//let observer = new window.app.Observer;
 							let galleryModel = new GalleryModel(url);
@@ -89,16 +91,35 @@
 		passiveBtn2.classList.remove("btn", "btn-outline-secondary");
 	}
 
-export function updateRoute() {
-    let routeName = document.location.hash.replace(/^#/, '');
+	function navigateTo(routeName) {
+		window.location.hash= "#" + routeName;
+	}
+
+	function isLoggedIn() {
+			let credentials = JSON.parse(localStorage.getItem('credentials'));
+			return !!credentials;
+	}
+
+
+	function activateRoute(routeName){
     if (activatedRoutes[routeName]) {
         activatedRoutes[routeName]();
     } else {
-        let route = routeConfig[routeName];//" ", info or gallery
+        let route = routeConfig[routeName];
         if (route) {
             route.init();
             route.show();
             activatedRoutes[routeName] = route.show;
         }
+    } 
+}
+
+export function updateRoute() {
+    let routeName = document.location.hash.replace(/^#/, '');
+    if(routeName && !isLoggedIn()) {
+        navigateTo(""); 
+    } else {
+        activateRoute(routeName);
     }
+    
 }

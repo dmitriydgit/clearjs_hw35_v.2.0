@@ -13,7 +13,7 @@ server.post('/login', (req, res) => {
     if(req.body.login == "ddd@gmail.com" && req.body.password == "12345678"){
         res.jsonp({status:true})
     } else {
-        res.sendStatus(401);
+        res.jsonp({status:false});
     }
 })
 

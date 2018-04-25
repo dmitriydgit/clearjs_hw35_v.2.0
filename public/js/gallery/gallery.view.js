@@ -45,8 +45,8 @@ export default	class GalleryView {
 			this.biuldWholeGallery();
 			this.checkLimit(); 
 			
-			console.log("readyDataForGallery" , this.readyDataForGallery)
-			console.log("visibleData", this.visibleData)
+			//console.log("readyDataForGallery" , this.readyDataForGallery)
+			//console.log("visibleData", this.visibleData)
 		};
 		
 		prepareData (data) {

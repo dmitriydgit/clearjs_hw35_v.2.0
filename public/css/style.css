@@ -1,4 +1,4 @@
-:root {
+	:root {
   --jumbotron-padding-y: 3rem;
 }
 
@@ -156,4 +156,8 @@ body {
 	
 .headerTop a  {
 	margin: 0 10px;
+}
+
+#personNavbar {
+	display:flex;
 }

@@ -16,15 +16,14 @@ export default	class LoginView {
 				wrongEmailMsg : document.querySelector("#wrongEmailMsg"),
 				wrongPassMsg : document.querySelector("#wrongPassMsg")
 			}
-			
 		};
 		
 		getLogAndPass(){
-			let item = {
+			let credentials = {
 				"login" : this.DOMElements.email.value,
 				"password" : this.DOMElements.password.value
 			}
-			return item;
+			return credentials;
 		};
 		
 		showErrorMsg(msgCode){
@@ -59,28 +58,28 @@ export default	class LoginView {
 				this.DOMElements.wrongPassMsg]});
 		};
 		
-		buildView() {  // данные для галереи
-			console.log("View is ready");
+		// buildView() {  // данные для галереи
+		// 	console.log("View is ready");
 			
-			this.hideLoginForm();
-			this.showPersonNavbar();
-			this.showGallery();
-			this.fillInputsOnUserPage(this.DOMElements.email.value , this.DOMElements.password.value);
-			this.showGalleryBlock();
-			this.initListeners();
-		};	
+		// 	this.hideLoginForm();
+		// 	this.showPersonNavbar();
+		// 	this.showGallery();
+		// 	this.fillInputsOnUserPage(this.DOMElements.email.value , this.DOMElements.password.value);
+		// 	this.showGalleryBlock();
+		// 	this.initListeners();
+		// };	
 		
-		initListeners () {
-			this.DOMElements.backBtn.addEventListener("click", this.goBack.bind(this));	
-			this.DOMElements.togglePasswordBtn.addEventListener("click", this.togglePasswordOutput.bind(this));
-			this.DOMElements.showGalleryBtn.addEventListener("click", this.showGalleryBlock.bind(this));	
-			this.DOMElements.showUserDataBtn.addEventListener("click", this.showUserDataBlock.bind(this));	
-		};
+		// initListeners () {
+		// 	this.DOMElements.backBtn.addEventListener("click", this.goBack.bind(this));	
+		// 	this.DOMElements.togglePasswordBtn.addEventListener("click", this.togglePasswordOutput.bind(this));
+		// 	this.DOMElements.showGalleryBtn.addEventListener("click", this.showGalleryBlock.bind(this));	
+		// 	this.DOMElements.showUserDataBtn.addEventListener("click", this.showUserDataBlock.bind(this));	
+		// };
 
-		fillInputsOnUserPage (inp , pass){
-			this.DOMElements.personNameField.value = inp;    
-			this.DOMElements.personPasswordField.value = pass;
-		};
+		// fillInputsOnUserPage (inp , pass){
+		// 	this.DOMElements.personNameField.value = inp;    
+		// 	this.DOMElements.personPasswordField.value = pass;
+		// };
 
 		showAlertMsg(){
 			this.showHide({"show" : [this.DOMElements.alertMsg]})
@@ -99,29 +98,33 @@ export default	class LoginView {
 			this.showHide({"show" : [this.DOMElements.wrongPassMsg]})
 		};
 
-		hideLoginForm(){
-			this.showHide({"hide" : [this.DOMElements.form]});
-		}
-		showGallery(){
-			this.showHide({"show" : [this.DOMElements.gallery]});
-		}
-		showPersonNavbar(){
-			this.showHide({"show" : [this.DOMElements.personNavbar]})
-		}
+		// hideLoginForm(){
+		// 	this.showHide({"hide" : [this.DOMElements.form]});
+		// }
+		// showGallery(){
+		// 	this.showHide({"show" : [this.DOMElements.gallery]});
+		// }
+		// showPersonNavbar(){
+		// 	this.showHide({"show" : [this.DOMElements.personNavbar]})
+		// }
+		// hideEnterBtn(){
+		// 	this.showHide({"hide" : [this.DOMElements.enterBtn]});
+		// }
 		showButtons(){
 			this.showHide({"show" :  
 				[this.DOMElements.showUserDataBtn,
 					this.DOMElements.showGalleryBtn,
-					this.DOMElements.enterBtn]
+					this.DOMElements.exitBtn]
 			})
 		}
 
-		hideEnterBtn(){
-			this.showHide({"hide" : [this.DOMElements.enterBtn]});
+		hideExitBtn(){
+			this.showHide({"hide" : [this.DOMElements.exitBtn]});
 		}
 		hideButtons(){
 			this.showHide({"hide" :  [this.DOMElements.showUserDataBtn,
-				this.DOMElements.showGalleryBtn]})
+				this.DOMElements.showGalleryBtn,
+				this.DOMElements.exitBtn]})
 			
 		}
 
